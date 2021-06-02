@@ -1,9 +1,6 @@
 const mongoose = require('mongoose')
 
 const walkSchema = new mongoose.Schema({
-  road: {
-    type: String
-  },
   startPoint: {
     type: String
   },
