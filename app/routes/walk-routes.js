@@ -28,7 +28,7 @@ const router = express.Router()
 // CRUD ACTIONS HERE
 
 // Index
-router.get('walks', requireToken, (req, res, next) => {
+router.get('/walks', requireToken, (req, res, next) => {
   Walk.find()
     .then(walks => {
       // walks will be an array of all the walks a user has begun or completed
@@ -44,7 +44,7 @@ router.get('walks', requireToken, (req, res, next) => {
 })
 
 // Show (one walk) when one is clicked from the index
-router.get('walks/:id', requireToken, (req, res, next) => {
+router.get('/walks/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the ':id' in the route
   Walk.findById(req.params.id)
     .then(handle404)
@@ -57,6 +57,8 @@ router.get('walks/:id', requireToken, (req, res, next) => {
 
 // Create (post)
 router.post('/walks', requireToken, (req, res, next) => {
+  console.log('req', req)
+  console.log('res', res)
   // set owner of new walk to be the logged in user
   req.body.walk.owner = req.user.id
 
