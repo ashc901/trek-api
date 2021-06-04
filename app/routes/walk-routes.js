@@ -29,7 +29,7 @@ const router = express.Router()
 
 // Index
 router.get('/walks', requireToken, (req, res, next) => {
-  Walk.find()
+  Walk.find({owner: req.user._id})
     .then(walks => {
       // walks will be an array of all the walks a user has begun or completed
       // converting to POJO using .map
@@ -56,7 +56,7 @@ router.get('/walks/:id', requireToken, (req, res, next) => {
 })
 
 // Create (post)
-router.post('/walks', requireToken, (req, res, next) => {
+router.post('/start', requireToken, (req, res, next) => {
   console.log('req', req)
   console.log('res', res)
   // set owner of new walk to be the logged in user
@@ -75,14 +75,18 @@ router.post('/walks', requireToken, (req, res, next) => {
 // update (patch) the amount a user has walked
 router.patch('/walks/:id', requireToken, removeBlanks, (req, res, next) => {
   delete req.body.walk.owner
-
+  const updatedWalk = req.body.walk
   Walk.findById(req.params.id)
     .then(handle404)
     .then(walk => {
       requireOwnership(req, walk)
-      return walk.updateOne(req.body.walk)
+      return walk.updateOne(updatedWalk)
     })
-    .then(() => res.sendStatus(204))
+    // .then(() => res.sendStatus(204))
+    .then((res) => {
+    //  res.sendStatus(204)
+      console.log(res)
+    })
     .catch(next)
 })
 
