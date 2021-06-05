@@ -75,18 +75,16 @@ router.post('/start', requireToken, (req, res, next) => {
 // update (patch) the amount a user has walked
 router.patch('/walks/:id', requireToken, removeBlanks, (req, res, next) => {
   delete req.body.walk.owner
-  const updatedWalk = req.body.walk
+  let updatedWalk = req.body.walk
   Walk.findById(req.params.id)
     .then(handle404)
     .then(walk => {
+      updatedWalk.distance = (parseInt(updatedWalk.distance) + parseInt(walk.distance))
+      console.log('walk', walk, 'updatedWalk', updatedWalk)
       requireOwnership(req, walk)
       return walk.updateOne(updatedWalk)
     })
-    // .then(() => res.sendStatus(204))
-    .then((res) => {
-    //  res.sendStatus(204)
-      console.log(res)
-    })
+    .then(() => res.sendStatus(204))
     .catch(next)
 })
 
